@@ -1,0 +1,54 @@
+html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Captcha Solver</title>
+  </head>
+  <body>
+    <div>
+      <img id="captcha" src="" />
+    </div>
+    <div>
+      <h3>Solved Captcha: </h3>
+      <p id="solvedText"></p>
+    </div>
+    <script>
+      const captchaSrc = new URLSearchParams(window.location.search).get('url') || 'sample.png';
+      document.getElementById('captcha').src = captchaSrc;
+
+      const visionAPI = 'https://vision.googleapis.com/v1/images:annotate?key=<YOUR_API_KEY>'; // Replace with your Vision API key
+      
+      async function solveCaptcha() {
+        const response = await fetch(captchaSrc);
+        const blob = await response.blob();
+        const buffer = await blob.arrayBuffer();
+        const base64 = btoa(new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+        
+        const body = {
+          requests: [
+            {
+              image: {
+                content: base64
+              },
+              features: [
+                { type: 'TEXT_DETECTION' }
+              ],
+            }
+          ]
+        };
+
+        fetch(visionAPI, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: { "Content-Type": "application/json" },
+        }).then(response => response.json())
+          .then(data => {
+            const solvedText = data.responses[0].textAnnotations[0].description;
+            document.getElementById('solvedText').innerText = solvedText;
+          });
+      }
+
+      setTimeout(solveCaptcha, 100);
+    </script>
+  </body>
+</html>
