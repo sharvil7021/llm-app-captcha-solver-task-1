@@ -1,16 +1,27 @@
-# Captcha Solver
+# Web-based Captcha Solver App
 
 ## Overview
-This is a simple web app that can display an image from a specified URL (using the `?url=` query parameter) and attempt to solve the image as a captcha using an OCR (Optical Character Recognition) model from Google's Vision API.
+
+This app solves any captcha and displays it on a webpage. It accepts a URL containing an image of the captcha to be solved as input. By default, it will solve and display a sample captcha. 
+
+The app uses the OpenAI Vision API to solve captchas. This API uses trained machine learning models to read and interpret the text in an image.
 
 ## Setup
-To use this app, you will need to replace `<YOUR_API_KEY>` with your actual Google Cloud API Key in the `visionAPI` variable of the `index.html`.
+
+Follow these steps to get the app running on your local machine:
+
+1. Save the HTML file on your computer.
+2. Open the HTML file in your web browser.
 
 ## Usage
-Begin by launching the `index.html` file in your web browser.
 
-The app will display the image from the URL specified in the `?url=` query parameter. If no URL is specified, it will display a default 'sample.png' image.
+1. Open the web app in your browser.
+2. Append `?url=your_image_url_here` to end of the URL in the address bar, where "your_image_url_here" is the URL of the image file of the captcha you want to solve.
+3. Press enter to load the new URL.
+4. The web app will now display the image of the captcha as well as the solved text.
 
-The app will then make a request to the Google Vision API, attempting to interpret any text found in the image. The interpreted text will then be displayed on the screen.
+Eg: If your local HTML file is hosted at `http://localhost:3000/captcha-solver.html`, navigate to `http://localhost:3000/captcha-solver.html?url=https://.../image.png` to solve a specific captcha.
 
-Please note that there is a short delay (around 100 milliseconds) before the app will attempt to solve the captcha. This is to ensure that the image has fully loaded before the Vision API is called. The interpretation should typically take less than 15 seconds, allowing the user to see the solution quite quickly.
+Alternatively, just navigate to `http://localhost:3000/captcha-solver.html` to solve and display the sample captcha.
+
+Please note that the OpenAI API used to solve captchas has certain rate limits - you may need to wait a few seconds between each request to the API.
