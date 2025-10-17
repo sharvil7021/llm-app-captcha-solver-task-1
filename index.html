@@ -2,51 +2,66 @@ html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Captcha Solver</title>
-  <style>
-    #imageContainer {
-      text-align: center;  
-      padding: 20px;
-    }
-    #result{
-      text-align: center; 
-      padding: 20px;
-      font-weight: bold;
-    }
-  </style>
+    <meta charset="utf-8">
+    <title>Captcha Solver</title>
+    <style>
+        #captcha-image {
+            max-width: 400px;
+        }
+    </style>
 </head>
-
 <body>
-  <div id="imageContainer">
-    <h2>Captcha image:</h2>
-    <img id="captcha" src="sample.png" alt="captcha">
-  </div>
-  <div id="result">
-    <h2>Captcha text:</h2>
-    <p id="captchaText">Loading...</p>
-  </div>
+    <img id="captcha-image" />
+    <pre id="captcha-solution"></pre>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const captchaUrl = urlParams.get('url') || 'sample.png';
-    document.getElementById('captcha').src = captchaUrl;
-    
-    fetch("https://api.example.com/data", {
-        method: "POST",
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify({imageUrl: captchaUrl})
-    })
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById("captchaText").textContent = data.text;
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      document.getElementById("captchaText").textContent = 'Error loading captcha';
-    });
-  });
-</script>
+    <script>
+        const SOLVER_API_ENDPOINT = '/api/solve-captcha';
+        const DEFAULT_BASE64_IMAGE = '<BASE64 Image Data Here>';
 
+        window.onload = function() {
+            const url = new URLSearchParams(location.search).get('url');
+            const captchaImage = document.getElementById('captcha-image');
+            const captchaSolution = document.getElementById('captcha-solution');
+
+            captchaSolution.textContent = 'Solving...'
+            
+            if (url) {
+                convertImageUrlToBase64(url, function(base64Image) {
+                    captchaImage.src = base64Image;
+                    solveCaptcha(base64Image).then(result => captchaSolution.textContent = result);
+                });
+            } else {
+                captchaImage.src = `data:image/png;base64,${DEFAULT_BASE64_IMAGE}`;
+                solveCaptcha(DEFAULT_BASE64_IMAGE).then(result => captchaSolution.textContent = result);
+            }
+        }
+
+        function convertImageUrlToBase64(url, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    callback(reader.result);
+                }
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', url);
+            xhr.responseType = 'blob';
+            xhr.send();
+        }
+
+        async function solveCaptcha(base64Image) {
+            const response = await fetch(SOLVER_API_ENDPOINT, {
+                method: 'POST',
+                body: base64Image
+            });
+
+            if (response.ok) {
+                return await response.text();
+            } else {
+                throw new Error('Error: ' + response.statusText);
+            }
+        }
+    </script>
 </body>
 </html>
