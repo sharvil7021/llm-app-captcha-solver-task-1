@@ -1,27 +1,22 @@
-# Web-based Captcha Solver App
+# Captcha Solver
 
 ## Overview
 
-This app solves any captcha and displays it on a webpage. It accepts a URL containing an image of the captcha to be solved as input. By default, it will solve and display a sample captcha. 
-
-The app uses the OpenAI Vision API to solve captchas. This API uses trained machine learning models to read and interpret the text in an image.
+The Captcha Solver is a single-page web app designed to solve captchas using an external API. The app fetches an image from a provided URL (via a `?url=` query parameter), or defaults to an attached sample image, and solves the captcha within 15 seconds. The solution, as well as the image itself, are then displayed on the page. 
 
 ## Setup
 
-Follow these steps to get the app running on your local machine:
+To setup the Captcha Solver web app on your local machine, use the following steps:
 
-1. Save the HTML file on your computer.
-2. Open the HTML file in your web browser.
+1. Download `index.html` to your preferred location on your local machine.
+2. Open `index.html` file in any web browser of your choice.
 
 ## Usage
 
-1. Open the web app in your browser.
-2. Append `?url=your_image_url_here` to end of the URL in the address bar, where "your_image_url_here" is the URL of the image file of the captcha you want to solve.
-3. Press enter to load the new URL.
-4. The web app will now display the image of the captcha as well as the solved text.
+To use this captcha solver, you need to provide a URL of an image by appending `?url=<your-image-url>` to the end of the page's URL in the address bar. If no URL parameter is provided, the app will default to solving the attached sample image.
 
-Eg: If your local HTML file is hosted at `http://localhost:3000/captcha-solver.html`, navigate to `http://localhost:3000/captcha-solver.html?url=https://.../image.png` to solve a specific captcha.
+Please note, as this is a demo version, the backend API (`https://api.example.com/data`) is a placeholder. In a production setting, you would replace this with the endpoint of an OCR service, like the OpenAI Vision API.
 
-Alternatively, just navigate to `http://localhost:3000/captcha-solver.html` to solve and display the sample captcha.
+## Improvements
 
-Please note that the OpenAI API used to solve captchas has certain rate limits - you may need to wait a few seconds between each request to the API.
+As this is version 1.0 of the Captcha Solver, no improvements from a previous version can be listed yet.
