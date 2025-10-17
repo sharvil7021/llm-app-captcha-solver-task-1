@@ -1,22 +1,11 @@
-# Captcha Solver
+## Captcha Solver App
 
-## Overview
+This is a simple, lightweight web app designed to test the functionality of an OCR (Optical Character Recognition) captcha solving service.
 
-The Captcha Solver is a single-page web app designed to solve captchas using an external API. The app fetches an image from a provided URL (via a `?url=` query parameter), or defaults to an attached sample image, and solves the captcha within 15 seconds. The solution, as well as the image itself, are then displayed on the page. 
+### Usage
 
-## Setup
+Run the app and it will automatically start attempting to solve a captcha whose URL has been provided in the "url" query parameter. If no URL is provided, it will attempt to solve a default image whose data is stored in the source code as a Base64 string.
 
-To setup the Captcha Solver web app on your local machine, use the following steps:
+Please be aware that the app runs 100% client-side (there is no server component). Consequently, the app will attempt to make a POST request to a local endpoint (`/api/solve-captcha`) with the Base64 data as the payload, where it is expected that the captcha will be solved. However, unless you have an appropriate service running at that endpoint, you will simply receive an error.
 
-1. Download `index.html` to your preferred location on your local machine.
-2. Open `index.html` file in any web browser of your choice.
-
-## Usage
-
-To use this captcha solver, you need to provide a URL of an image by appending `?url=<your-image-url>` to the end of the page's URL in the address bar. If no URL parameter is provided, the app will default to solving the attached sample image.
-
-Please note, as this is a demo version, the backend API (`https://api.example.com/data`) is a placeholder. In a production setting, you would replace this with the endpoint of an OCR service, like the OpenAI Vision API.
-
-## Improvements
-
-As this is version 1.0 of the Captcha Solver, no improvements from a previous version can be listed yet.
+You can customize this endpoint by modifying the `SOLVER_API_ENDPOINT` constant in the source code.
