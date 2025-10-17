@@ -1,39 +1,52 @@
 html
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Captcha Solver</title>
-        <style>
-            #captcha-image {
-                max-width: 500px;
-                margin: auto;
-                display: block;
-            }
-        </style>
-    </head>
-    <body>
-        <h2>Captcha Solver</h2>
-        <img id="captcha-image" src="sample.png" />
-        <p id="captcha-solution"></p>
+<head>
+  <title>Captcha Solver</title>
+  <style>
+    #imageContainer {
+      text-align: center;  
+      padding: 20px;
+    }
+    #result{
+      text-align: center; 
+      padding: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="imageContainer">
+    <h2>Captcha image:</h2>
+    <img id="captcha" src="sample.png" alt="captcha">
+  </div>
+  <div id="result">
+    <h2>Captcha text:</h2>
+    <p id="captchaText">Loading...</p>
+  </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const captchaUrl = urlParams.get('url') || 'sample.png';
+    document.getElementById('captcha').src = captchaUrl;
     
-        <script>
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            var imageUrl = urlParams.get('url')
-            
-            if(imageUrl != null) {
-                document.getElementById("captcha-image").src = imageUrl;
-            }
-            
-            var oReq = new XMLHttpRequest();
-            oReq.addEventListener("load", reqListener);
-            oReq.open("GET", "http://api.openai.com/captcha/solve?url="+imageUrl);
-            oReq.send();
-            
-            function reqListener () {
-              const result = JSON.parse(this.responseText);
-              document.getElementById("captcha-solution").textContent = 'Solved Captcha: ' + result.solution;
-            }
-        </script>
-    </body>
+    fetch("https://api.example.com/data", {
+        method: "POST",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify({imageUrl: captchaUrl})
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("captchaText").textContent = data.text;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById("captchaText").textContent = 'Error loading captcha';
+    });
+  });
+</script>
+
+</body>
 </html>
